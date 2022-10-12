@@ -20,26 +20,38 @@
       <pre id="result" style="user-select: all"></pre>
     </label>
 
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"
-      integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   </body>
   <script>
-    const input = document.querySelector("#input").value;
-    const key = document.querySelector("#key").value;
-    const encrypt = document.querySelector("#encrypt");
-    const decrypt = document.querySelector("#decrypt");
-    const result = document.querySelector("#result");
 
-    encrypt.addEventListener("click", () => {
-      result.innerText = CryptoJS.AES.encrypt(input, key);
+    const inputInput = document.querySelector("#input");
+    const keyInput = document.querySelector("#key");
+    const encryptInput = document.querySelector("#encrypt");
+    const decryptInput = document.querySelector("#decrypt");
+    const resultInput = document.querySelector("#result");
+
+    encryptInput.addEventListener("click", () => {
+      result.innerText = Encrypt(inputInput.value, keyInput.value);
     });
 
-    decrypt.addEventListener("click", () => {
-      result.innerText = CryptoJS.AES.decrypt(input, key).toString(CryptoJS.enc.Utf8);
+    decryptInput.addEventListener("click", () => {
+      result.innerText = Decrypt(inputInput.value, keyInput.value);
     });
+
+    function Encrypt(word, key = "share") {
+      let encJson = CryptoJS.AES.encrypt(JSON.stringify(word), key).toString();
+      let encData = CryptoJS.enc.Base64.stringify(
+        CryptoJS.enc.Utf8.parse(encJson)
+      );
+      return encData;
+    }
+
+    function Decrypt(word, key = "share") {
+      let decData = CryptoJS.enc.Base64.parse(word).toString(CryptoJS.enc.Utf8);
+      let bytes = CryptoJS.AES.decrypt(decData, key).toString(
+        CryptoJS.enc.Utf8
+      );
+      return JSON.parse(bytes);
+    }
   </script>
 </html>
